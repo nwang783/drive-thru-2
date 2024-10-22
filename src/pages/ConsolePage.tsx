@@ -10,6 +10,10 @@ import './ConsolePage.scss';
 import { db, getOrder, modifyItem, createOrder, addItemToOrder, removeItemFromOrder, getMenuItems, listenToOrder } from '../services/firebase';
 import { collection, getDocs, addDoc, query, where, updateDoc, doc } from 'firebase/firestore';
 import defaultMenuItems from '../components/menuItems.js';
+import sodaImage from '../assets/menu_images/soda.png';
+import burgerImage from '../assets/menu_images/burger.png';
+import friesImage from '../assets/menu_images/fries.png';
+import hotdogImage from '../assets/menu_images/hotdog.png';
 
 const LOCAL_RELAY_SERVER_URL: string = process.env.REACT_APP_LOCAL_RELAY_SERVER_URL || '';
 
@@ -32,6 +36,7 @@ interface MenuItem {
   price: number;
   defaultIngredients: string[];
   customizableIngredients: string[];
+  image?: string;
 }
 
 interface OrderItem {
@@ -401,6 +406,16 @@ export function ConsolePage() {
       setItems(items);
     });
 
+    const getImage = (name: string): string => {
+      switch (name.toLowerCase()) {
+        case 'soda': return sodaImage;
+        case 'burger': return burgerImage;
+        case 'fries': return friesImage;
+        case 'hot dog': return hotdogImage;
+        default: return '';
+      }
+    };
+
     setItems(client.conversation.getItems());
 
     const fetchMenuItems = async () => {
@@ -413,6 +428,7 @@ export function ConsolePage() {
           price: item.price,
           defaultIngredients: Array.isArray(item?.defaultIngredients) ? item.defaultIngredients : [],
           customizableIngredients: Array.isArray(item?.customizableIngredients) ? item.customizableIngredients : [],
+          image: getImage(item.name),
         }));
         console.log("Typed menu items:", typedItems);
         setMenuItems(typedItems);
@@ -490,7 +506,9 @@ export function ConsolePage() {
           ) : (
             menuItems.map((item) => (
               <div key={item.id} className="menu-item">
-                <div className="item-image-placeholder"></div>
+                <div className='image-container'>
+                  <img src={item.image} alt='menuItemImage'/>
+                </div>
                 <h3>{item.name}</h3>
                 <p>${item.price.toFixed(2)}</p>
               </div>

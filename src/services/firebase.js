@@ -62,7 +62,8 @@ export const getMenuItems = async () => {
         name: data.name,
         price: data.price,
         defaultIngredients: Array.isArray(data.defaultIngredients) ? data.defaultIngredients : [],
-        customizableIngredients: Array.isArray(data.customizableIngredients) ? data.customizableIngredients : []
+        customizableIngredients: Array.isArray(data.customizableIngredients) ? data.customizableIngredients : [],
+        image: data.image,
       };
     });
     return items;
