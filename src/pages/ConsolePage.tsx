@@ -100,15 +100,36 @@ export function ConsolePage() {
     const wavRecorder = wavRecorderRef.current;
     const wavStreamPlayer = wavStreamPlayerRef.current;
 
-    setIsConnected(true);
-    setItems(client.conversation.getItems());
+    try {
+      // Create a new order first
+      const newOrderId = await createOrder();
+      setOrderId(newOrderId);
+      console.log(`Created new order with ID: ${newOrderId}`);
+      
+      // Update instructions with the new order ID
+      const updatedInstructions = `${instructions}
 
-    await wavRecorder.begin();
-    await wavStreamPlayer.connect();
-    await client.connect();
+Current Order ID: ${newOrderId}
 
-    if (client.getTurnDetectionType() === 'server_vad') {
-      await wavRecorder.record((data) => client.appendInputAudio(data.mono));
+Note: Use this order ID for all order-related tools.`;
+      
+      // Then proceed with connection
+      setIsConnected(true);
+      setItems(client.conversation.getItems());
+
+      // Update session with new instructions
+      client.updateSession({ instructions: updatedInstructions });
+
+      await wavRecorder.begin();
+      await wavStreamPlayer.connect();
+      await client.connect();
+
+      if (client.getTurnDetectionType() === 'server_vad') {
+        await wavRecorder.record((data) => client.appendInputAudio(data.mono));
+      }
+    } catch (error) {
+      console.error('Error during connection:', error);
+      // Handle error appropriately
     }
   }, []);
 
@@ -116,6 +137,7 @@ export function ConsolePage() {
     setIsConnected(false);
     // setItems([]);
     // setOrderItems([]);
+    setOrderId(null);
 
     const client = clientRef.current;
     client.disconnect();
@@ -238,7 +260,6 @@ export function ConsolePage() {
     const wavStreamPlayer = wavStreamPlayerRef.current;
     const client = clientRef.current;
 
-    client.updateSession({ instructions: instructions });
     client.updateSession({ input_audio_transcription: { model: 'whisper-1' } });
 
     client.addTool(
