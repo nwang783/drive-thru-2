@@ -330,27 +330,21 @@ export function ConsolePage() {
           type: 'object',
           properties: {
             orderId: { type: 'string', description: 'ID of the order' },
-            itemId: { type: 'string', description: 'This is a unique identifier for each item in the order.'},
+            itemId: { type: 'string', description: 'This is a unique identifier for each item in the order. (e.g burger14322...)'},
             modifications: { type: 'string', description: 'Ingredient to modify and the modifier. You MUST use on of these modifiers: NO, LITE, or EX. (e.g. EX ketchup).'},
           },
           required: ['orderId', 'itemId', 'modifications'],
         }
       },
-      async ({ orderId, itemId, modifications, custom_instructions }: {orderId: string; itemId: string; modifications: string; custom_instructions: string }) => {
+      async ({ orderId, itemId, modifications }: {orderId: string; itemId: string; modifications: string}) => {
         try {
-          if (modifications && custom_instructions) {
-            const result = await modifyItem(orderId, itemId, modifications, custom_instructions)
-            logFunctionCall('modify_item', {orderId, itemId, modifications, custom_instructions}, result)
-            return result;
-          }
-          else if (modifications && !custom_instructions) {
+          if (modifications) {
             const result = await modifyItem(orderId, itemId, modifications)
             logFunctionCall('modify_item', {orderId, itemId, modifications}, result)
             return result;
-          }
-          else {
-            const result = await modifyItem(orderId, itemId, custom_instructions)
-            logFunctionCall('modify_item', {orderId, itemId, custom_instructions}, result)
+          } else {
+            const result = await modifyItem(orderId, itemId)
+            logFunctionCall('modify_item', {orderId, itemId}, result)
             return result;
           }
         } catch (error) {
