@@ -264,32 +264,6 @@ Note: Use this order ID for all order-related tools.`;
 
     client.addTool(
       {
-        name: 'create_order',
-        description: 'Creates a new order for the customer',
-        parameters: {
-          type: 'object',
-          properties: {},
-          required: [],
-        },
-      },
-      async (): Promise<CreateOrderResult> => {
-        try {
-          const newOrderId = await createOrder();
-          setOrderId(newOrderId);
-          console.log(`Set Order ID ${orderId}`);
-          const result = { success: true, orderId: newOrderId, message: `Created new order with ID: ${newOrderId}` };
-          logFunctionCall('create_order', {}, result);
-          return result;
-        } catch (error) {
-          const result = { success: false, error: (error as Error).message };
-          logFunctionCall('create_order', {}, result);
-          return result;
-        }
-      }
-    );
-
-    client.addTool(
-      {
         name: 'add_item_to_order',
         description: 'Adds an item to an existing order',
         parameters: {

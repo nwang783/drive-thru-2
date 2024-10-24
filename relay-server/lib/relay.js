@@ -48,26 +48,6 @@ export class RealtimeRelay {
     // Add this block to register the tools (BUGFIX MB & Claude)
     client.addTool(
       {
-        name: 'create_order',
-        description: 'Creates a new order for the customer',
-        parameters: {
-          type: 'object',
-          properties: {},
-          required: [],
-        },
-      },
-      async () => {
-        try {
-          return;
-        } catch (error) {
-          const result = { success: false, error: error.message };
-          return result;
-        }
-      }
-    );
-
-    client.addTool(
-      {
         name: 'add_item_to_order',
         description: 'Adds an item to an existing order',
         parameters: {
