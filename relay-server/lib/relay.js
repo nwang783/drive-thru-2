@@ -58,9 +58,7 @@ export class RealtimeRelay {
       },
       async () => {
         try {
-          const newOrderId = await createOrder();
-          const result = { success: true, orderId: newOrderId, message: `Created new order with ID: ${newOrderId}` };
-          return result;
+          return;
         } catch (error) {
           const result = { success: false, error: error.message };
           return result;
@@ -84,9 +82,7 @@ export class RealtimeRelay {
       },
       async ({ orderId, itemName, modifications }) => {
         try {
-          const itemId = modifications ? await addItemToOrder(orderId, itemName, modifications) : await addItemToOrder(orderId, itemName)
-          const result = { success: true, message: `Added ${itemName}: ${itemId} to order ${orderId}` };
-          return result;
+          return;
         } catch (error) {
           const result = { success: false, error: error.message };
           return result;
@@ -109,9 +105,7 @@ export class RealtimeRelay {
       },
       async ({ orderId, itemId }) => {
         try {
-          await removeItemFromOrder(orderId, itemId);
-          const result = { success: true, message: `Removed ${itemId} from order ${orderId}` };
-          return result;
+          return;
         } catch (error) {
           const result = { success: false, error: error.message };
           return result;
@@ -134,23 +128,7 @@ export class RealtimeRelay {
         }
       },
       async ({ orderId, itemId, modifications, custom_instructions }) => {
-        try {
-          if (modifications && custom_instructions) {
-            const result = await modifyItem(orderId, itemId, modifications, custom_instructions)
-            return result;
-          }
-          else if (modifications && !custom_instructions) {
-            const result = await modifyItem(orderId, itemId, modifications)
-            return result;
-          }
-          else {
-            const result = await modifyItem(orderId, itemId, custom_instructions)
-            return result;
-          }
-        } catch (error) {
-          const result = { success: false, error: error.message };
-          return result;
-        }
+        return;
       },
     );
 
@@ -168,7 +146,6 @@ export class RealtimeRelay {
       },
       async ({ orderId }) => {
         try {
-          const result = await getOrder(orderId);
           return result;
         } catch (error) {
           const result = { success: false, error: error.message };
