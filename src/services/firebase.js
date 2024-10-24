@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, getDoc, getDocs, query, where, onSnapshot } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, getDoc, getDocs, query, where, onSnapshot, deleteField } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBPOdrVjBelqcAzlU29krs8zevSimnaJmY",
@@ -129,7 +129,7 @@ export const addItemToOrder = async (orderId, itemName, modifications) => {
     });
 
     console.log(`Added ${itemName} to order ${orderId}`);
-    return itemId;
+    return orderItemId;
   } catch (e) {
     console.error("Error adding item to order: ", e);
     throw e;
@@ -200,7 +200,7 @@ export const removeItemFromOrder = async (orderId, itemId) => {
 
     // Remove the item and update the total price
     await updateDoc(orderRef, {
-      [`items.${itemId}`]: null,  // This will remove the field
+      [`items.${itemId}`]: deleteField(), 
       totalPrice: newTotalPrice
     });
 
