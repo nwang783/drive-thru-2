@@ -17,13 +17,6 @@ import hotdogImage from '../assets/menu_images/hotdog.png';
 
 const LOCAL_RELAY_SERVER_URL: string = process.env.REACT_APP_LOCAL_RELAY_SERVER_URL || '';
 
-type CreateOrderResult = {
-  success: boolean;
-  orderId?: string;
-  message?: string;
-  error?: string;
-};
-
 type AddRemoveItemResult = {
   success: boolean;
   message?: string;
