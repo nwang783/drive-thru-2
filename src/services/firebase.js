@@ -136,7 +136,7 @@ export const addItemToOrder = async (orderId, itemName, modifications) => {
   }
 };
 
-export const modifyItem = async (orderId, itemId, modifications, customInstructions) => {
+export const modifyItem = async (orderId, itemId, modifications) => {
   try {
     const orderRef = doc(db, 'orders', orderId);
     const orderDoc = await getDoc(orderRef);
@@ -151,28 +151,26 @@ export const modifyItem = async (orderId, itemId, modifications, customInstructi
       throw new Error(`Item not found with itemId: ${itemId}`);
     }
 
-    const modificationId = `mod${Date.now()}`;
-    const modification = {
-      ...modifications,
-      timestamp: Date.now()
-    };
+    // Convert modifications to array if it's a single string
+    const newModifications = Array.isArray(modifications) ? modifications : [modifications];
 
-    // Only add customInstructions if it's defined and not an empty string
-    if (customInstructions && customInstructions.trim() !== '') {
-      modification.customInstructions = customInstructions.trim();
-    }
+    // Get existing modifications or initialize empty array
+    const existingModifications = updatedOrder.items[itemId].modifications || [];
 
-    // Ensure we're not setting an empty object
-    if (Object.keys(modification).length > 1) { // > 1 because timestamp will always be there
+    // Combine existing and new modifications
+    const updatedModifications = [...existingModifications, ...newModifications];
+
+    // Only update if there are modifications to apply
+    if (newModifications.length > 0) {
       await updateDoc(orderRef, {
-        [`items.${itemId}.modifications.${modificationId}`]: modification
+        [`items.${itemId}.modifications`]: updatedModifications
       });
 
       console.log(`Modified item ${itemId} in order ${orderId}`);
-      return modificationId;
+      return true;
     } else {
       console.log(`No modifications to apply for item ${itemId} in order ${orderId}`);
-      return null;
+      return false;
     }
   } catch (error) {
     console.error('Error modifying item: ', error);
