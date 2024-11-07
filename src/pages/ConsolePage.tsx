@@ -438,20 +438,7 @@ Note: Use this order ID for all order-related tools.`;
                 <span className="speaker">{item.role}:</span>
                 <div className="message">
                   {item.formatted.text || item.formatted.transcript}
-                  {item.formatted.tool && (
-                    <div className="function-call">
-                      Function Call: {item.formatted.tool.name}(
-                      {JSON.stringify(item.formatted.tool.arguments)})
-                    </div>
-                  )}
-                  {item.type === 'function_call_output' && (
-                    <div className="function-output">
-                      Function Output: {item.formatted.output}
-                    </div>
-                  )}
-                  {item.formatted.file && (
-                    <audio src={item.formatted.file.url} controls />
-                  )}
+                 
                 </div>
               </div>
             ))}
